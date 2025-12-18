@@ -8,8 +8,8 @@ __pycache__/
 # notebooks
 .ipynb_checkpoints/
 
-# model files
-*.pkl
-
 # env files
 .env
+
+heart.csv
+*.csv
