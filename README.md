@@ -124,15 +124,16 @@ Bu sayede proje:
 
 Sadece teknik değil, gerçek bir kullanıcıya hitap eden bir uygulama haline geldi.
 
-# 🗂️ Proje Yapısı
-.
-├── templates/ # Frontend HTML dosyaları
+## 📁 Proje Yapısı
+
+```text
+├── templates/          # Frontend HTML dosyaları
 ├── .gitignore
-├── heart_model.pkl # Eğitilmiş ML modeli (pipeline)
-├── main.py # FastAPI backend
-├── model.ipynb # Model geliştirme & feature importance
-├── model_test.py # Model test scripti
-├── requirements.txt # Gerekli kütüphaneler
+├── heart_model.pkl     # Eğitilmiş ML modeli (pipeline)
+├── main.py             # FastAPI backend
+├── model.ipynb         # Model geliştirme & feature importance
+├── model_test.py       # Model test scripti
+└── requirements.txt    # Gerekli kütüphaneler
 
 # 🛠️ Kullanılan Teknolojiler
 
