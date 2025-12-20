@@ -4,6 +4,10 @@ Bu proje, kalp hastalığı riskini tahmin eden uçtan uca (end-to-end) bir maki
 
 📌 Bu çalışma, Atıl Samancıoğlu – Veri Bilimi ve Makine Öğrenmesi 2025: 100 Günlük Kamp eğitiminin bitirme projesi kapsamında hazırlanmıştır.
 
+## 🎨 Proje Arayüzü
+
+![Proje Arayüzü](assets/ML_BitirmeProjesi.png)
+
 # 🚀 Projenin Genel Akışı
 
 Veri analizi ve modelleme (model.ipynb)
