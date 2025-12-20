@@ -134,6 +134,7 @@ Sadece teknik değil, gerçek bir kullanıcıya hitap eden bir uygulama haline g
 ├── model.ipynb         # Model geliştirme & feature importance
 ├── model_test.py       # Model test scripti
 └── requirements.txt    # Gerekli kütüphaneler
+```
 
 # 🛠️ Kullanılan Teknolojiler
 
