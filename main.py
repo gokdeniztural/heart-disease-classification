@@ -1,9 +1,12 @@
-from fastapi import FastAPI, Request, Response, HTTPException
+from fastapi import FastAPI, Request
+from fastapi.templating import Jinja2Templates
+from fastapi.responses import HTMLResponse
 import pickle
 import pandas as pd
 from pydantic import BaseModel
 
 app = FastAPI()
+templates = Jinja2Templates(directory="templates")
 
 with open("heart_model.pkl", "rb") as f:
     pipeline = pickle.load(f)
@@ -65,6 +68,10 @@ class HeartInput(BaseModel):
     slope: str
     ca: int
     thal: str
+
+@app.get("/", response_class=HTMLResponse)
+async def home(request: Request):
+     return templates.TemplateResponse("index.html", {"request": request})
 
 
 # Data setinde string olması gereken datalar hazır encode edilmiş şekilde numeric idi. Burada kullanıcıdan string şeklinde alacağımız

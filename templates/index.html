@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalp Hastalığı Risk Analizi</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #818cf8;
+            --danger: #ef4444;
+            --danger-dark: #dc2626;
+            --success: #10b981;
+            --success-dark: #059669;
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+            --text-light: #94a3b8;
+            --bg-glass: rgba(255, 255, 255, 0.7);
+            --border-color: rgba(148, 163, 184, 0.2);
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 20%, #2563eb 40%, #1d4ed8 60%, #1e40af 80%, #1e3a8a 100%);
+            background-size: 400% 400%;
+            animation: gradientFlow 15s ease infinite;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.5) 0%, transparent 60%),
+                radial-gradient(circle at 80% 80%, rgba(14, 165, 233, 0.5) 0%, transparent 60%),
+                radial-gradient(circle at 40% 20%, rgba(37, 99, 235, 0.4) 0%, transparent 60%),
+                radial-gradient(circle at 60% 60%, rgba(29, 78, 216, 0.3) 0%, transparent 60%);
+            animation: backgroundPulse 6s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 90% 70%, rgba(14, 165, 233, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(37, 99, 235, 0.2) 0%, transparent 50%);
+            animation: backgroundFloat 10s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes backgroundPulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1) translate(0, 0);
+            }
+            25% {
+                opacity: 0.9;
+                transform: scale(1.15) translate(30px, -30px);
+            }
+            50% {
+                opacity: 0.8;
+                transform: scale(1.1) translate(-20px, 20px);
+            }
+            75% {
+                opacity: 0.9;
+                transform: scale(1.12) translate(20px, 30px);
+            }
+        }
+
+        @keyframes backgroundFloat {
+            0%, 100% {
+                transform: translate(0, 0) scale(1) rotate(0deg);
+            }
+            33% {
+                transform: translate(40px, -40px) scale(1.1) rotate(120deg);
+            }
+            66% {
+                transform: translate(-40px, 40px) scale(0.9) rotate(240deg);
+            }
+        }
+
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            25% { background-position: 100% 50%; }
+            50% { background-position: 100% 100%; }
+            75% { background-position: 0% 100%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-radius: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: var(--shadow-xl), 
+                        0 0 0 1px rgba(255, 255, 255, 0.2) inset,
+                        0 0 100px rgba(59, 130, 246, 0.2),
+                        0 0 200px rgba(14, 165, 233, 0.1);
+            padding: 48px;
+            max-width: 900px;
+            width: 100%;
+            max-height: 95vh;
+            overflow-y: auto;
+            overflow-x: hidden;
+            animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            z-index: 1;
+        }
+
+        .container::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(14, 165, 233, 0.1) 0%, transparent 50%);
+            animation: containerGlow 6s ease-in-out infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        @keyframes containerGlow {
+            0%, 100% {
+                transform: translate(-50%, -50%) scale(1) rotate(0deg);
+                opacity: 0.6;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.3) rotate(180deg);
+                opacity: 0.9;
+            }
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+        }
+
+        .container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .container::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--primary), var(--primary-dark));
+            border-radius: 10px;
+        }
+
+        .container::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, var(--primary-dark), var(--primary));
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px) scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        h1 {
+            color: var(--text-primary);
+            text-align: center;
+            margin-bottom: 12px;
+            font-size: clamp(2rem, 5vw, 2.75rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+            position: relative;
+            animation: titleGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes titleGlow {
+            0%, 100% {
+                text-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+            }
+            50% {
+                text-shadow: 0 0 30px rgba(59, 130, 246, 0.4), 0 0 40px rgba(14, 165, 233, 0.2);
+            }
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+            font-weight: 400;
+            letter-spacing: -0.01em;
+        }
+
+        .heart-icon {
+            display: inline-block;
+            animation: pulse 2s ease-in-out infinite, heartRotate 4s ease-in-out infinite;
+            filter: drop-shadow(0 4px 12px rgba(239, 68, 68, 0.4));
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                filter: drop-shadow(0 4px 12px rgba(239, 68, 68, 0.4));
+            }
+            50% {
+                transform: scale(1.15);
+                filter: drop-shadow(0 6px 20px rgba(239, 68, 68, 0.6));
+            }
+        }
+
+        @keyframes heartRotate {
+            0%, 100% {
+                transform: rotate(0deg);
+            }
+            25% {
+                transform: rotate(-5deg);
+            }
+            75% {
+                transform: rotate(5deg);
+            }
+        }
+
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 0.95rem;
+            letter-spacing: -0.01em;
+        }
+
+        .form-group {
+            position: relative;
+            margin-bottom: 28px;
+        }
+
+        .form-group::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            border-radius: 16px;
+        }
+
+        .form-group:hover::before {
+            opacity: 1;
+            animation: shimmer 2s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%);
+            }
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 16px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.8);
+            color: var(--text-primary);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: inherit;
+            font-weight: 500;
+            position: relative;
+        }
+
+        input[type="number"]:hover,
+        select:hover {
+            border-color: var(--primary-light);
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: var(--shadow-md),
+                        0 0 20px rgba(59, 130, 246, 0.25),
+                        0 0 40px rgba(59, 130, 246, 0.1);
+            transform: translateY(-2px);
+        }
+
+        input[type="number"]:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 1);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15),
+                        var(--shadow-lg),
+                        0 0 30px rgba(59, 130, 246, 0.3),
+                        0 0 60px rgba(59, 130, 246, 0.15);
+            transform: translateY(-2px);
+            animation: inputGlow 2s ease-in-out infinite, inputPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes inputGlow {
+            0%, 100% {
+                box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15),
+                            var(--shadow-lg),
+                            0 0 30px rgba(59, 130, 246, 0.3),
+                            0 0 60px rgba(59, 130, 246, 0.15);
+            }
+            50% {
+                box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.25),
+                            var(--shadow-lg),
+                            0 0 40px rgba(59, 130, 246, 0.4),
+                            0 0 80px rgba(59, 130, 246, 0.25);
+            }
+        }
+
+        @keyframes inputPulse {
+            0%, 100% {
+                border-color: var(--primary);
+            }
+            50% {
+                border-color: var(--primary-light);
+            }
+        }
+
+        select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%236366f1' d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            padding-right: 44px;
+        }
+
+        .input-hint {
+            font-size: 0.85rem;
+            color: #475569;
+            margin-top: 8px;
+            margin-bottom: 4px;
+            padding-left: 4px;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .container {
+                padding: 32px 24px;
+                max-height: 98vh;
+                border-radius: 24px;
+            }
+            h1 {
+                font-size: 1.75rem;
+            }
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px 24px;
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 50%, #1d4ed8 100%);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-top: 32px;
+            box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4),
+                        0 0 0 0 rgba(59, 130, 246, 0.5),
+                        0 0 40px rgba(59, 130, 246, 0.2);
+            letter-spacing: -0.01em;
+            position: relative;
+            overflow: hidden;
+            animation: buttonPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes buttonPulse {
+            0%, 100% {
+                box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4),
+                            0 0 0 0 rgba(59, 130, 246, 0.5),
+                            0 0 40px rgba(59, 130, 246, 0.2);
+            }
+            50% {
+                box-shadow: 0 4px 14px rgba(59, 130, 246, 0.5),
+                            0 0 0 4px rgba(59, 130, 246, 0.3),
+                            0 0 60px rgba(59, 130, 246, 0.3);
+            }
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.25);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+                        height 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .submit-btn:hover::before {
+            width: 400px;
+            height: 400px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.6),
+                        0 0 0 4px rgba(59, 130, 246, 0.2),
+                        0 0 80px rgba(59, 130, 246, 0.4);
+            animation: none;
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4),
+                        0 0 30px rgba(59, 130, 246, 0.3);
+        }
+
+        .submit-btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .result-container {
+            margin-top: 32px;
+            padding: 32px;
+            border-radius: 24px;
+            text-align: center;
+            display: none;
+            animation: slideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: var(--shadow-xl);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .result-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
+            animation: rotate 8s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .result-container.show {
+            display: block;
+        }
+
+        .result-container.risk {
+            background: linear-gradient(135deg, #f87171 0%, #ef4444 50%, #dc2626 100%);
+            color: white;
+        }
+
+        .result-container.no-risk {
+            background: linear-gradient(135deg, #34d399 0%, #10b981 50%, #059669 100%);
+            color: white;
+        }
+
+        .result-title {
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            font-weight: 800;
+            margin-bottom: 16px;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            position: relative;
+            z-index: 1;
+            letter-spacing: -0.02em;
+        }
+
+        .result-title.risk-text {
+            color: #7f1d1d;
+        }
+
+        .result-title.no-risk-text {
+            color: #064e3b;
+        }
+
+        .result-percentage {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 900;
+            margin: 20px 0;
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 1;
+            letter-spacing: -0.03em;
+        }
+
+        .result-label {
+            font-size: 1.1rem;
+            opacity: 0.95;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 1;
+            font-weight: 500;
+        }
+
+        .result-warning {
+            font-size: 0.75rem;
+            opacity: 0.9;
+            margin-top: 16px;
+            position: relative;
+            z-index: 1;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            font-weight: 400;
+            letter-spacing: 0.01em;
+        }
+
+        .reset-btn {
+            width: 100%;
+            padding: 14px 24px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            color: white;
+            border: 1.5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 16px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-top: 20px;
+            letter-spacing: -0.01em;
+            position: relative;
+            z-index: 1;
+        }
+
+        .reset-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .reset-btn:active {
+            transform: translateY(0);
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 32px;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            border: 4px solid rgba(59, 130, 246, 0.1);
+            border-top: 4px solid #3b82f6;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.3),
+                        0 0 40px rgba(59, 130, 246, 0.2);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading p {
+            margin-top: 16px;
+            color: var(--text-secondary);
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        /* Floating particles effect */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: float 15s infinite ease-in-out;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5),
+                        0 0 20px rgba(59, 130, 246, 0.3);
+        }
+
+        .particle:nth-child(odd) {
+            width: 8px;
+            height: 8px;
+            background: rgba(147, 197, 253, 0.5);
+            box-shadow: 0 0 15px rgba(147, 197, 253, 0.6),
+                        0 0 30px rgba(59, 130, 246, 0.4);
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(100px);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-orb"></div>
+    <div class="floating-orb"></div>
+    <div class="floating-orb"></div>
+    <div class="particles" id="particles"></div>
+    <div class="container">
+        <h1>
+            <span class="heart-icon">❤️</span> Kalp Hastalığı Risk Analizi
+        </h1>
+        <p class="subtitle">Sağlığınızı kontrol etmek için lütfen aşağıdaki bilgileri doldurun</p>
+
+        <form id="heartForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="age">Yaş</label>
+                    <input type="number" id="age" name="age" min="20" max="100" step="1" required>
+                    <div class="input-hint">(Örnek: 52 yaş)</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="sex">Cinsiyet</label>
+                    <select id="sex" name="sex" required>
+                        <option value="">Seçiniz...</option>
+                        <option value="kadın">Kadın</option>
+                        <option value="erkek">Erkek</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="cp">Göğüs Ağrısı Tipi</label>
+                <select id="cp" name="cp" required>
+                    <option value="">Seçiniz...</option>
+                    <option value="tipik anjina">Tipik Anjina</option>
+                    <option value="atipik anjina">Atipik Anjina</option>
+                    <option value="anjinal olmayan ağrı">Anjinal Olmayan Ağrı</option>
+                    <option value="asemptomatik">Asemptomatik</option>
+                </select>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="trestbps">Dinlenme Kan Basıncı (mm Hg)</label>
+                    <input type="number" id="trestbps" name="trestbps" min="80" max="200" step="1" required>
+                    <div class="input-hint">(Örnek: 125 mm Hg)</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="chol">Kolesterol (mg/dl)</label>
+                    <input type="number" id="chol" name="chol" min="100" max="600" step="1" required>
+                    <div class="input-hint">(Örnek: 212 mg/dl)</div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="fbs">Açlık Kan Şekeri > 120 mg/dl</label>
+                    <select id="fbs" name="fbs" required>
+                        <option value="">Seçiniz...</option>
+                        <option value="hayır">Hayır</option>
+                        <option value="evet">Evet</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="restecg">Dinlenme EKG Sonuçları</label>
+                    <select id="restecg" name="restecg" required>
+                        <option value="">Seçiniz...</option>
+                        <option value="normal">Normal</option>
+                        <option value="st-t dalga anormalliği">ST-T Dalga Anormalliği</option>
+                        <option value="sol ventrikül hipertrofisi">Sol Ventrikül Hipertrofisi</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="thalach">Maksimum Kalp Atış Hızı</label>
+                    <input type="number" id="thalach" name="thalach" min="60" max="220" step="1" required>
+                    <div class="input-hint">(Örnek: 168 bpm)</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="exang">Egzersiz Kaynaklı Anjina</label>
+                    <select id="exang" name="exang" required>
+                        <option value="">Seçiniz...</option>
+                        <option value="hayır">Hayır</option>
+                        <option value="evet">Evet</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="oldpeak">ST Depresyonu</label>
+                    <input type="number" id="oldpeak" name="oldpeak" min="0" max="6" step="0.1" required>
+                    <div class="input-hint">(Örnek: 1.0)</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="slope">Egzersiz ST Segment Eğimi</label>
+                    <select id="slope" name="slope" required>
+                        <option value="">Seçiniz...</option>
+                        <option value="yükselen">Yükselen</option>
+                        <option value="düz">Düz</option>
+                        <option value="düşen">Düşen</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="ca">Floroskopi ile Renklendirilmiş Ana Damar Sayısı (0-4)</label>
+                    <select id="ca" name="ca" required>
+                        <option value="">Seçiniz...</option>
+                        <option value="0">0</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="thal">Talasemi</label>
+                    <select id="thal" name="thal" required>
+                        <option value="">Seçiniz...</option>
+                        <option value="normal">Normal</option>
+                        <option value="sabit defekt">Sabit Defekt</option>
+                        <option value="tersinir defekt">Tersinir Defekt</option>
+                    </select>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn">
+                <span>Risk Analizi Yap</span>
+            </button>
+        </form>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Analiz yapılıyor...</p>
+        </div>
+
+        <div class="result-container" id="result">
+            <div class="result-title" id="resultTitle"></div>
+            <div class="result-percentage" id="resultPercentage"></div>
+            <div class="result-label" id="resultLabel"></div>
+            <div class="result-warning">⚠️ Bu sonuçlar kesin değildir. Lütfen sağlık uzmanınıza danışın.</div>
+            <button type="button" class="reset-btn" id="resetBtn">🔄 Yeniden Hesapla</button>
+        </div>
+    </div>
+
+    <script>
+        // Floating particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (10 + Math.random() * 10) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        createParticles();
+
+        // Form gönderimi
+        document.getElementById('heartForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const form = e.target;
+            const formData = new FormData(form);
+            const data = {};
+
+            // Form verilerini topla
+            for (const [key, value] of formData.entries()) {
+                if (key === 'age' || key === 'trestbps' || key === 'chol' || key === 'thalach' || key === 'ca') {
+                    data[key] = parseInt(value);
+                } else if (key === 'oldpeak') {
+                    data[key] = parseFloat(value);
+                } else {
+                    data[key] = value;
+                }
+            }
+
+            // Loading göster
+            document.getElementById('loading').classList.add('show');
+            document.getElementById('result').classList.remove('show');
+
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                // Loading gizle
+                document.getElementById('loading').classList.remove('show');
+
+                // Sonuçları göster
+                const resultContainer = document.getElementById('result');
+                const resultTitle = document.getElementById('resultTitle');
+                const resultPercentage = document.getElementById('resultPercentage');
+                const resultLabel = document.getElementById('resultLabel');
+
+                const isRisk = result.tahmin.includes('VAR');
+                
+                resultTitle.textContent = result.tahmin;
+                resultTitle.classList.remove('risk-text', 'no-risk-text');
+                
+                if (isRisk) {
+                    resultTitle.classList.add('risk-text');
+                    resultTitle.style.color = '#7f1d1d';
+                } else {
+                    resultTitle.classList.add('no-risk-text');
+                    resultTitle.style.color = '#064e3b';
+                }
+                
+                resultPercentage.textContent = result.risk_orani + '%';
+                resultLabel.textContent = 'Risk Oranı';
+
+                // Risk durumuna göre stil değiştir
+                resultContainer.classList.remove('risk', 'no-risk');
+                if (isRisk) {
+                    resultContainer.classList.add('risk');
+                } else {
+                    resultContainer.classList.add('no-risk');
+                }
+
+                resultContainer.classList.add('show');
+
+                // Sonuca scroll yap
+                resultContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+            } catch (error) {
+                console.error('Hata:', error);
+                document.getElementById('loading').classList.remove('show');
+                alert('Bir hata oluştu. Lütfen tekrar deneyin.');
+            }
+        });
+
+        // Yeniden hesapla butonu
+        document.getElementById('resetBtn').addEventListener('click', () => {
+            // Formu sıfırla
+            document.getElementById('heartForm').reset();
+            
+            // Sonuçları gizle
+            document.getElementById('result').classList.remove('show');
+            document.getElementById('loading').classList.remove('show');
+            
+            // Forma scroll yap
+            document.getElementById('heartForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+    </script>
+</body>
+</html>
