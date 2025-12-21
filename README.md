@@ -24,7 +24,7 @@ Tüm bu adımlar birbiriyle uyumlu şekilde ilerletilerek gerçek hayata yakın 
 
 # 📊 Model Geliştirme – model.ipynb
 
-Bu dosya, projenin makine öğrenmesi kalbidir.
+Data Set: https://www.kaggle.com/datasets/johnsmith88/heart-disease-dataset?utm_source
 
 Yapılan Çalışmalar:
 
